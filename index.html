@@ -40,29 +40,22 @@
 
 <script>
 
-// DEFINE VARIABLES - set up the variables we need to store the data our program will use. Variable are containers for values.
-//variable to assign a random number between 1 and 100
 var randomNumber = Math.floor(Math.random() * 100) + 1;
 
-//these 3 variables store a reference to the results parahraphs in the HTML, and are used to insert valies into the paragraphs later in the the code. 
 var guesses = document.querySelector('.guesses');
 var lastResult = document.querySelector('.lastResult');
-var lowOrHigh = document.querySelector('.lowOrHi');
+var lowOrHi = document.querySelector('.lowOrHi');
 
-// these 2 variables store references to the form text input and submit button and are used to control submitting the guess later on.
 var guessSubmit = document.querySelector('.guessSubmit');
 var guessField = document.querySelector('.guessField');
 
-// these 2 variables are used to keep track of the guesses, and reset the game 
 var guessCount = 1;
 var resetButton;
 
-//FUNCTIONS
-//The first line (line 2 above) declares a variable called userGuess and sets its value to the current value entered inside the text field. We also run this value through the built-in Number() method, just to make sure the value is definitely a number.
 function checkGuess() {
     var userGuess = Number(guessField.value);
-//conditional code block - runs code selectively depending on whether a certain condition is true or not. if(){}
-// if the test inside the () is true, then we run the code inside the curly braces. If not, we move to the next bit of code. 
+guessSubmit.addEventListener('click', checkGuess);
+
     if (guessCount === 1) {
         guesses.textContent = 'Previous guesses: ';
     }
@@ -78,25 +71,80 @@ function checkGuess() {
         setGameOver();
     } else {
         lastResult.textContent = 'Wrong!';
-        last.Result.style.backgroundColor = 'red';
+        lastResult.style.backgroundColor = 'red';
         if(userGuess < randomNumber) {
             lowOrHi.textContent = 'Last guess was too low!';
         } else if(userGuess > randomNumber) {
-            loworHi.textContent = 'Last guess was too high!';
+            lowOrHi.textContent = 'Last guess was too high!';
         }
     }
-
     guessCount++;
     guessField.value = '';
     guessField.focus();
-
 }
-    
 
-//OPERATORS 
-    
-    
-    
+function checkGuess() {
+  var userGuess = Number(guessField.value);
+  if (guessCount === 1) {
+    guesses.textContent = 'Previous guesses: ';
+  }
+  guesses.textContent += userGuess + ' ';
+ 
+  if (userGuess === randomNumber) {
+    lastResult.textContent = 'Congratulations! You got it right!';
+    lastResult.style.backgroundColor = 'green';
+    lowOrHi.textContent = '';
+    setGameOver();
+  } else if (guessCount === 10) {
+    lastResult.textContent = '!!!GAME OVER!!!';
+    setGameOver();
+  } else {
+    lastResult.textContent = 'Wrong!';
+    lastResult.style.backgroundColor = 'red';
+    if(userGuess < randomNumber) {
+      lowOrHi.textContent = 'Last guess was too low!';
+    } else if(userGuess > randomNumber) {
+      lowOrHi.textContent = 'Last guess was too high!';
+    }
+  }
+ 
+  guessCount++;
+  guessField.value = '';
+  guessField.focus();
+}
+
+
+guessSubmit.addEventListener('click', checkGuess);
+
+function setGameOver() {
+  guessField.disabled = true;
+  guessSubmit.disabled = true;
+  resetButton = document.createElement('button');
+  resetButton.textContent = 'Start new game';
+  document.body.appendChild(resetButton);
+  resetButton.addEventListener('click', resetGame);
+}
+
+function resetGame() {
+  guessCount = 1;
+
+  var resetParas = document.querySelectorAll('.resultParas p');
+  for (var i = 0 ; i < resetParas.length ; i++) {
+    resetParas[i].textContent = '';
+  }
+
+  resetButton.parentNode.removeChild(resetButton);
+
+  guessField.disabled = false;
+  guessSubmit.disabled = false;
+  guessField.value = '';
+  guessField.focus();
+
+  lastResult.style.backgroundColor = 'white';
+
+  randomNumber = Math.floor(Math.random() * 100) + 1;
+}
+
 </script>
 </body>
 </html>
